@@ -1,11 +1,13 @@
 source 'https://rubygems.org'
 
-
 gem 'rails', '4.2.5'
 
 gem 'pg', '0.18.4'
 
 gem 'rspec-rails', '3.4.0'
+
+gem 'bootstrap-sass', '3.3.4.1' 
+gem 'font-awesome-rails', '4.5.0.1' 
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'

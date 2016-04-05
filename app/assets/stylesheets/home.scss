@@ -1,3 +1,41 @@
-// Place all the styles related to the home controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+.header {
+  background-color: white;
+  margin-bottom: 5%;
+}
+
+// weather //
+.current-weather i {
+  float: left;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.current-weather i {
+  float: left;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-bottom: 5%
+}
+
+.current-weather h4 {
+  float: left;
+  margin-left: 15%;
+}
+
+// commute //
+
+#map {
+  height: 384px;
+  width: 100%;
+}
+
+// events //
+
+.events ul {
+  list-style: none;
+}
+
+.event-start {
+  float: left;
+  width: 25%;
+}
