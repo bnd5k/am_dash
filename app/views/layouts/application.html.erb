@@ -9,14 +9,30 @@
   <body>
 
     <div class="container">
-      <% flash.each do |key, value| %>
-        <div class="alert <%= bootstrap_class_for(key) %> fade in text-center margin-top-one-em">
-          <%= value %>
-        </div>
-      <% end %>
-    </div>
+      <div class="row">
+        <% flash.each do |key, value| %>
+          <div class="alert <%= bootstrap_class_for(key) %> fade in text-center margin-top-one-em">
+            <%= value %>
+          </div><!-- /alert -->
+        <% end %>
+      </div> <!-- /row -->
+    </div> <!-- /container -->
 
     <%= yield %>
+
+    <% if user_signed_in? %>
+      <footer class="footer">
+        <div class="container">
+          <div class="row">
+            <p>
+
+            <%= link_to "Log out", destroy_user_session_url, method: :delete %>
+            </p>
+
+          </div> <!-- /row -->
+        </div><!-- /contaner -->
+      </footer>
+    <% end %>
 
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 
