@@ -5,6 +5,13 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def ensure_registration_complete
+    unless current_user.locations.present?
+      flash[:notice] = "Just one more thing..."
+      redirect_to new_location_path
+    end
+  end
+
   def authenticate_user!
     if user_signed_in?
       super

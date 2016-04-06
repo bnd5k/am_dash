@@ -5,5 +5,7 @@ Rails.application.routes.draw do
     get 'welcome', to: "devise/sessions#new", as: :welcome
   end
 
+  resources :locations 
+
   root to: "dashboard#index"
 end
