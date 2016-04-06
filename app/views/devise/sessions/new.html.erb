@@ -1,0 +1,19 @@
+<section class="login">
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-12 well text-center">
+
+        <h2>Log in</h2>
+
+        <%= link_to user_omniauth_authorize_path(provider: 'google_oauth2'), class: "btn btn-lg btn-block omb_btn-google" do %>
+          <i class="fa fa-google-plus"></i>
+          <span class="hidden-xs"> | Log in </span>
+        <% end %>
+
+      </div> 
+    </div> 
+  </div> 
+
+</section>
