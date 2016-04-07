@@ -8,7 +8,7 @@ describe AMDash::Cache do
     allow(::Rails).to receive(:cache).and_return(rails_cache_mock)
   end
 
-  it 'wraps the behavior of the true cachier' do
+  it 'allows writing to a data store' do
     key = :foo
     payload = :bar
     expiration = 100
@@ -22,4 +22,11 @@ describe AMDash::Cache do
     described_class.write(key, payload, expiration)
   end
 
+  it 'allows reading from a data store' do
+    key = :foo
+
+    expect(rails_cache_mock).to receive(:read).with(key)
+    
+    described_class.read(key)
+  end
 end
