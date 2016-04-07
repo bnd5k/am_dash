@@ -8,7 +8,7 @@
     <div class="row">
       <div class="col-lg-12">
 
-        <h1>Good Morning, Ben </h1>
+        <h1>Good Morning, <%= @account_summary["first_name"] %> </h1>
 
       </div> <!-- /cols -->
     </div> <!-- /row -->
@@ -23,8 +23,7 @@
       <section class="date">
 
         <div class="card">
-          <h4> Wednesday, April 6, 2016 </h4>
-          <h4> Spokane, WA </h4>
+          <h2> <%= Date.today.strftime("%A, %b %d, %Y") %> </h2>
         </div> <!-- /card -->
 
       </section>
@@ -33,24 +32,6 @@
         <div class="card">
           <h2> Weather </h2>
 
-          <div class="current-weather">
-
-            <h4>
-              Currently
-            </h4>
-
-            <i class="fa fa-sun-o fa-2x"></i>
-            <div> 
-              Temp: 40
-            </div>
-
-            <div> 
-              Precipitation: 7%
-            </div>
-          </div><!-- /current-weather -->
-
-          <hr />
-
           <div class="weather-forecast">
 
             <h4>
@@ -58,27 +39,19 @@
             </h4>
             <table class="table table-striped">
               <tr>
+
                 <th>
                   Time
                 </th>
                 <th>
                   6:00
                 </th>
-                <th>
-                  9:00
-                </th>
-                <th>
-                  12:00
-                </th>
-                <th>
-                  3:00
-                </th>
-                <th>
-                  5:00
-                </th>
-                <th>
-                  8:00
-                </th>
+                <% @weather_forecast.each do |forecast| %>
+                  <th>
+                    <%= Time.at(forecast["time"]).strftime("%H:%m") %>
+                  </th>
+                <% end %>
+
               </tr>
 
               <tr>
@@ -87,51 +60,14 @@
                   Temp
                 </td>
 
-                <td>
-                  40
-                </td>
-                <td>
-                  50
-                </td>
-                <td>
-                  60
-                </td>
-                <td>
-                  70
-                </td>
-                <td>
-                  60
-                </td>
-                <td>
-                  45
-                </td>
-
-              </tr>
-
-              <tr>
+                <% @weather_forecast.each do |forecast| %>
 
                 <td>
-                  Precip
+                    <%= forecast["temp"].to_i %>
                 </td>
 
-                <td>
-                  7
-                </td>
-                <td>
-                  7
-                </td>
-                <td>
-                  7
-                </td>
-                <td>
-                  7
-                </td>
-                <td>
-                  7
-                </td>
-                <td>
-                  7
-                </td>
+                <% end %>
+
               </tr>
 
             </table>
@@ -144,21 +80,25 @@
         <div class="card">
           <h2> Top News </h2>
 
-          <% 3.times do %>
+          <% @news_articles.each do |news_article| %>
             <article>
-              <h4>
-                Lorem Ipsum
-              </h4>
+              <h3>
+                <%= news_article["headline"] %>
+              </h3>
 
               <div class="article-summary">
                 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam laoreet finibus magna nec tempus. Vivamus vestibulum tempus ligula, vel euismod eros pharetra a. Cras suscipit enim est, at sollicitudin ex bibendum sed. Duis tristique, mauris sit amet ultricies interdum, libero mi tincidunt enim, quis euismod nunc felis nec velit. 
+                <%= news_article["snippet"] %>
+                </p>
+                <p>
+                <%= link_to "Read More", news_article["url"], target: "_blank" %>
                 </p>
               </div>
+
             </article>
 
+            <hr / >
           <% end %>
-
 
         </div> <!-- /card -->
       </section>
@@ -177,25 +117,35 @@
 
           <ul class="text-center">
 
-            <% 5.times do %>
+            <% if @events.any? %>
 
-              <li>
-                <div class="row">
+              <% @events.each do |event| %>
 
-                  <span class="event-start"> 
-                    <strong>
-                      9:00
-                    </strong>
-                  </span> 
+                <li>
+                  <div class="row">
 
-                  <span class="event-description"> 
-                    Work
-                  </span> 
+                    <span class="event-start"> 
+                      <strong>
+                        <%= event["start"] %>
+                      </strong>
+                    </span> 
 
-                </div> 
+                    <span class="event-description"> 
+                      <%= event["name"] %>
+                    </span> 
 
-              </li>
+                  </div> 
 
+                </li>
+
+              <% end %>
+            <% else %>
+              <h4>
+                No events currently on your Google calendar.
+              </h4>
+              <h5>
+                Time to relax.
+              </h5>
             <% end %>
 
           </ul>
@@ -206,8 +156,9 @@
       <section class="Traffic">
         <div class="card">
           <h2> Commute </h2>
+          <h4> Green is Good... Red is Bad </h4>
 
-          <div id="map">
+          <div id="map" data-lat="<%= @account_summary["work_latitude"] %>" data-lon="<%= @account_summary["work_longitude"]%>" >
           </div>
 
         </div> <!-- /card -->

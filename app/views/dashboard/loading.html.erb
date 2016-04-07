@@ -1,0 +1,23 @@
+  <div class="container">
+    <div class="row well">
+
+      <h1> Grabbing some fresh data for you. </h1>
+      <h2> This will only take a moment... </h2>
+
+
+    </div><!--/row -->
+  </div><!--/ container -->
+
+
+
+<script type="text/javascript">
+
+var intervalId = setInterval(function() {
+  $.get("<%= status_path %>", function(finished) {
+    if (finished) {
+      clearInterval(intervalId);
+      document.location = "<%= root_path %>"
+    };
+  });
+}, 1000);
+</script>
