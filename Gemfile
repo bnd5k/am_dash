@@ -9,6 +9,7 @@ gem 'omniauth-oauth2', '~> 1.3.1'
 gem 'omniauth-google-oauth2', '0.2.2'
 gem 'google-api-client', '0.8.2' 
 gem 'geocoder', '1.3.3'
+gem 'sucker_punch', '2.0.1'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'

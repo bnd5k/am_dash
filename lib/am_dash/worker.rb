@@ -1,0 +1,40 @@
+require 'am_dash/am_dash'
+require 'am_dash/workers/sucker_punch/download_and_store_user_data'
+
+module AMDash
+  module Worker
+    class << self
+      #Generic interface for worker.  Allows me to start off with silly, lightweight worker
+      #but then upgrade to something like Resque when needed
+
+      def enqueue(job_name, *args)
+
+        if ENV["AM_DASH_WORKER"] == "sucker_punch"
+          job = sucker_punch_job_from_string(job_name)    
+          job.perform_async(*args)
+        else
+          raise NoWorkerError
+        end
+
+      end
+
+      private
+
+      def sucker_punch_job_from_string(job_name)
+        case job_name.to_sym
+        when :download_and_store_user_data
+          AMDash::Worker::SuckerPunch::DownloadAndStoreUserData.new(AMDash.download_and_store_user_data)
+
+        else
+          raise NoJobFoundError 
+        end
+
+      end
+
+    end
+
+    class NoJobFoundError < StandardError ; end  
+    class NoWorkerError < StandardError ; end
+
+  end
+end
