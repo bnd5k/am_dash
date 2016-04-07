@@ -1,5 +1,3 @@
-require 'pry'
-
 module AMDash
   module Account
     class UpdateLocationCoordinates

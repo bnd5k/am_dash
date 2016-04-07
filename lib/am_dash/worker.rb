@@ -1,3 +1,4 @@
+require 'sucker_punch'
 require 'am_dash/am_dash'
 require 'am_dash/workers/sucker_punch/download_and_store_user_data'
 
@@ -11,7 +12,7 @@ module AMDash
 
         if ENV["AM_DASH_WORKER"] == "sucker_punch"
           job = sucker_punch_job_from_string(job_name)    
-          job.perform_async(*args)
+          job.perform(*args)
         else
           raise NoWorkerError
         end
@@ -23,8 +24,7 @@ module AMDash
       def sucker_punch_job_from_string(job_name)
         case job_name.to_sym
         when :download_and_store_user_data
-          AMDash::Worker::SuckerPunch::DownloadAndStoreUserData.new(AMDash.download_and_store_user_data)
-
+          AMDash::Worker::SuckerPunch::DownloadAndStoreUserData.new
         else
           raise NoJobFoundError 
         end

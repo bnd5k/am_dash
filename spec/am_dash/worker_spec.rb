@@ -16,7 +16,7 @@ describe AMDash::Worker do
     it "enqueues job to download and story user data" do
       user_id = 5008
 
-      expect(job).to receive(:perform_async).with(user_id)
+      expect(job).to receive(:perform).with(user_id)
 
       subject.enqueue(:download_and_store_user_data, user_id)
     end
