@@ -257,17 +257,12 @@ Devise.setup do |config|
   #
   # The router that invoked `devise_for`, in the example above, would be:
   # config.router_name = :my_engine
-  #
-  # When using OmniAuth, Devise cannot automatically set OmniAuth path,
-  # so you need to do it manually. For the users scope, it would be:
-  # config.omniauth_path_prefix = '/my_engine/users/auth'
-  #
-  # config.omniauth :google_oauth2, ENV["AM_DASH_GOOGLE_KEY"], ENV["AM_DASH_GOOGLE_SECRET"], client_options: { :ssl => { :verify => !Rails.env.development? } }
-    config.omniauth :google_oauth2, ENV["AM_DASH_GOOGLE_KEY"], ENV["AM_DASH_GOOGLE_SECRET"], { 
-      # provider_ignores_state: true,
-      # access_type: "offline",
-      # approval_prompt: "",
-      client_options: { :ssl => { :verify => !Rails.env.development? } }
-    }
-#scope: "userinfo.email,userinfo.profile", 
+
+  config.omniauth :google_oauth2, ENV["AM_DASH_GOOGLE_KEY"], ENV["AM_DASH_GOOGLE_SECRET"], { 
+    access_type: "offline",
+    approval_prompt: "",
+    scope: "userinfo.email,userinfo.profile,calendar,calendar.readonly", 
+    client_options: { :ssl => { :verify => !Rails.env.development? } }
+  }
+
 end

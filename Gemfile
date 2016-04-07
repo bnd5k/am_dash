@@ -7,6 +7,7 @@ gem 'font-awesome-rails', '4.5.0.1'
 gem 'devise', '3.5.2'
 gem 'omniauth-oauth2', '~> 1.3.1'
 gem 'omniauth-google-oauth2', '0.2.2'
+gem 'google-api-client', '0.8.2' 
 gem 'geocoder', '1.3.3'
 
 # Use SCSS for stylesheets

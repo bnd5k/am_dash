@@ -37,6 +37,7 @@ module AMDash
           response_body = JSON.parse(response.body)
           response_body["response"]["docs"]
         else
+          #TODO: Add logging
           []
         end
       end
