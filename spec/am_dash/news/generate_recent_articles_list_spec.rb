@@ -2,7 +2,6 @@ require 'am_dash/news/generate_recent_articles_list'
 
 describe AMDash::News::GenerateRecentArticlesList do
   let(:cache) { double(:cache) }
-  let(:net_http_mock) { double(:net_http_mock) }
   let(:news_query_response) { double(:news_query_response, code: "200",  body: response_body) }
   let(:response_body) do
     "{\"response\":{\"meta\":{\"hits\":1922,\"time\":71,\"offset\":0},\"docs\":[{\"web_url\":\"http://www.nytimes.com/aponline/2016/04/06/us/ap-us-teacher-recruitment.html\",\"snippet\":\"The Hawaii Department of Education has been seeking out educators from the mainland to deal with the state's growing teacher shortage.\",\"lead_paragraph\":\"The Hawaii Department of Education has been seeking out educators from the mainland to deal with the state's growing teacher shortage.\",\"abstract\":null,\"print_page\":null,\"blog\":[],\"source\":\"AP\",\"multimedia\":[],\"headline\":{\"main\":\"Hawaii Looks to Mainland to Deal With Big Teacher Shortage\",\"print_headline\":\"Hawaii Looks to Mainland to Deal With Big Teacher Shortage\"},\"keywords\":[],\"pub_date\":\"2016-04-06T22:38:37Z\",\"document_type\":\"article\",\"news_desk\":\"None\",\"section_name\":\"U.S.\",\"subsection_name\":null,\"byline\":{\"person\":[],\"original\":\"By THE ASSOCIATED PRESS\",\"organization\":\"THE ASSOCIATED PRESS\"},\"type_of_material\":\"News\",\"_id\":\"5705c92538f0d86865ca52ef\",\"word_count\":\"381\",\"slideshow_credits\":null}]}}" 
