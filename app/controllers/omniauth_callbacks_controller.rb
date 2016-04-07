@@ -4,7 +4,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def google_oauth2
     auth_data = request.env['omniauth.auth']
-    @user = AMDash.find_or_create_from_google(auth_data)
+    @user = AMDash.find_or_create_from_google.execute(auth_data)
     if @user
        sign_in_and_redirect @user
     else

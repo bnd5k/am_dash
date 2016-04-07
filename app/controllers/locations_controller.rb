@@ -10,7 +10,7 @@ class LocationsController < ApplicationController
   end
 
   def create
-    @home, @work = AMDash.create_location(params[:home_address], params[:work_address], current_user.id)
+    @home, @work = AMDash.create_location.execute(params[:home_address], params[:work_address], current_user.id)
     if !@home.errors.any? && !@work.errors.any?
       redirect_to root_url
     else
