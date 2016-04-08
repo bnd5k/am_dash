@@ -57,6 +57,7 @@ module AMDash
         if response.code == "200"
           response_body = JSON.parse(response.body)
         else
+          #TODO: Add logging
           []
         end
       end

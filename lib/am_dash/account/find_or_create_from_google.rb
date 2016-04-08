@@ -27,7 +27,6 @@ module AMDash
           end
 
           account
-
         end
       end
 

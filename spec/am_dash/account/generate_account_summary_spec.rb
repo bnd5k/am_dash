@@ -20,7 +20,6 @@ describe AMDash::Account::GenerateAccountSummary do
     subject.execute(user.id)
   end
 
-
   it 'generates an object with expected attributes' do
     allow(user_model).to receive(:find_by_id).with(user.id).and_return(user)
     

@@ -3,7 +3,6 @@ require 'am_dash/account/find_or_create_from_google'
 describe AMDash::Account::FindOrCreateFromGoogle do
   let(:user_model) { double(:user_model) }
   let(:account) { double(:account) }
-
   let(:auth_data) do
     {"provider"=>"google_oauth2",
      "uid"=>"105601260094057036217",

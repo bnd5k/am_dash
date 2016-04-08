@@ -9,7 +9,6 @@ RSpec.describe DashboardController, type: :request do
   let(:generate_events_list) { double(:generate_events_list) }
   let(:generate_weather_forecast) { double(:generate_weather_forecast) }
   let(:generate_recent_article_list) { double(:generate_recent_article_list) }
-  let(:some_json) { {}.to_json }
 
   let(:user) do
     user = User.create!(

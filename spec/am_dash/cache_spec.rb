@@ -18,7 +18,7 @@ describe AMDash::Cache do
       payload,
       expires_in: expiration
     )
-    
+
     described_class.write(key, payload, expiration)
   end
 
@@ -26,7 +26,8 @@ describe AMDash::Cache do
     key = :foo
 
     expect(rails_cache_mock).to receive(:read).with(key)
-    
+
     described_class.read(key)
   end
+
 end

@@ -31,7 +31,6 @@ describe AMDash::Account::GenerateEventsList do
   end
 
   it 'fails gracefully' do
-
     allow(user_model).to receive(:find_by_id).with(user.id).and_return(user)
 
     expect(mock_api_client.authorization).to receive(:access_token=).with(user.google_token)
@@ -66,9 +65,7 @@ describe AMDash::Account::GenerateEventsList do
       :headers => {'Content-Type' => 'application/json'}
     ).and_return(calendar_query_response("200"))
 
-    payload = [  
-      { start: "2016-04-07T08:30:00-07:00", name: "Marsh email re: charity checkin" }
-    ]
+    payload = [  { start: "2016-04-07T08:30:00-07:00", name: "Marsh email re: charity checkin" } ]
 
     expect(cache).to receive(:write).with(
       "#{user.id}-events",

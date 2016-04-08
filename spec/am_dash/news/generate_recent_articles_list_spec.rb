@@ -28,12 +28,12 @@ describe AMDash::News::GenerateRecentArticlesList do
       article_collection.to_json,
       described_class::FOUR_HOURS
     )
+
     subject.execute
   end
 
   context "failure" do
     it "handles 400 error code response" do
-
       response_to_bad_request = Net::HTTPResponse.new(1.0, 400, "Your request is bad and you should feel bad!")
 
       allow(Net::HTTP).to receive(:get_response).and_return(response_to_bad_request)
@@ -43,11 +43,11 @@ describe AMDash::News::GenerateRecentArticlesList do
         [].to_json,
         described_class::FOUR_HOURS
       )
+
       subject.execute
     end
 
     it "handles 500 error code response" do
-
       response_from_broken_news_service = Net::HTTPResponse.new(1.0, 400, "Barf!")
 
       allow(Net::HTTP).to receive(:get_response).and_return(response_from_broken_news_service)
@@ -57,6 +57,7 @@ describe AMDash::News::GenerateRecentArticlesList do
         [].to_json,
         described_class::FOUR_HOURS
       )
+
       subject.execute
     end
   end

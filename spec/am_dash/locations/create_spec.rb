@@ -75,7 +75,6 @@ describe AMDash::Locations::Create do
       ).and_return(valid_location)
 
       expect(subject.execute(home_address, work_address, user_id)).to eq [valid_location, valid_location]
-
     end
   end
 

@@ -11,6 +11,9 @@ module AMDash
       def enqueue(job_name, *args)
 
         if ENV["AM_DASH_WORKER"] == "sucker_punch"
+          #env variable here will ultimately allow for hotswapping workers
+          #totally premature optimization, but I've been wanting to play withsomething like this
+          #lately
           job = sucker_punch_job_from_string(job_name)    
           job.perform(*args)
         else
@@ -28,7 +31,6 @@ module AMDash
         else
           raise NoJobFoundError 
         end
-
       end
 
     end

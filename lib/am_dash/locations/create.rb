@@ -11,25 +11,25 @@ module AMDash
 
       def execute(home_address, work_address, user_id)
 
-          home = location_model.new(
-            address: home_address,
-            user_id: user_id,
-            category: LOCATION_CATEGORIES[:home]
-          )
+        home = location_model.new(
+          address: home_address,
+          user_id: user_id,
+          category: LOCATION_CATEGORIES[:home]
+        )
 
-          work = location_model.new(
-            address: work_address,
-            user_id: user_id,
-            category: LOCATION_CATEGORIES[:work]
-          )
+        work = location_model.new(
+          address: work_address,
+          user_id: user_id,
+          category: LOCATION_CATEGORIES[:work]
+        )
 
-          if home.valid? && work.valid?
-            home.save! && work.save!
-          end
+        if home.valid? && work.valid?
+          home.save! && work.save!
+        end
 
-          [home, work]
+        [home, work]
       end
-      
+
       attr_reader :location_model
 
     end

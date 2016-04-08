@@ -19,7 +19,6 @@ describe AMDash::Weather::GenerateWeatherForecast do
   before do
     stub_const('ENV', {'AM_DASH_OPEN_WEATHER_KEY' => 'asdf'})
     allow(Time).to receive(:now).and_return(mock_time)
-
   end
 
   it 'fails gracefully' do
