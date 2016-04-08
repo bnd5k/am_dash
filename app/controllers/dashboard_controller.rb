@@ -1,4 +1,5 @@
 require 'am_dash/am_dash'
+require 'am_dash/worker'
 
 class DashboardController < ApplicationController
 

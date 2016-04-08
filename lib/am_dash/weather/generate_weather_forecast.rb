@@ -31,41 +31,34 @@ module AMDash
       attr_reader :user_model, :cache, :update_location_coordinates
 
       def upcoming_weather(location)
-        five_day_forecast = all_weather(location.latitude, location.longitude)
-        forecast_for_today = five_day_forecast.first(8) # 24 hours in day / forecast results in 3 hr intervals
+        forecast_for_today = all_weather(location.latitude, location.longitude)["hourly"]["data"]
 
         result = []
-        forecast_for_today.map  do |weather_data|
-          result << { time: weather_data["dt"], temp: weather_data["main"]["temp"] }
+
+        forecast_for_today.each do |weather_data|
+          hour = Time.at(weather_data["time"]).hour
+          if selectable_time?(hour)
+            result << { time: hour, temp: weather_data["temperature"] }
+          end
         end
+
         result
       end
 
+      def selectable_time?(hour)
+        # grab 6am, 9am, 12pm, 3pm, 6pm, and 9pm
+        (6..21) === hour && (hour % 3 == 0)
+      end
+
       def all_weather(latitude, longitude)
-        request = request_uri(latitude, longitude)
+        request  = URI("https://api.forecast.io/forecast/#{ENV["AM_DASH_FORECAST_IO_KEY"]}/#{latitude},#{longitude},#{Time.now.to_i}")
         response = Net::HTTP.get_response(request)
 
         if response.code == "200"
           response_body = JSON.parse(response.body)
-          response_body["list"]
         else
           []
         end
-      end
-
-      def request_uri(latitude, longitude)
-        uri = URI("http://api.openweathermap.org/data/2.5/forecast")
-
-        params = {
-          lat: latitude,
-          lon: longitude,
-          units: :imperial,
-          appid: ENV["AM_DASH_OPEN_WEATHER_KEY"]
-        }
-
-        uri.query = URI.encode_www_form(params)
-
-        uri
       end
 
       def write_to_cache(user_id, payload)
