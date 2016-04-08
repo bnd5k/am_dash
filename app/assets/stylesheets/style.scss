@@ -1,7 +1,6 @@
 html, body {
   height: 100%;
-  background-color: lightgrey;
-
+  background:asset-url("sky.jpg") 
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -17,6 +16,10 @@ ul li, p {
   font-size: 1.5em;
 }
 
+.container {
+  background: rgba(255,255,255,0.5);
+}
+
 .card {
   background-color: white;
   padding: 3%;
@@ -24,10 +27,10 @@ ul li, p {
 }
 
 .footer {
-  background-color: white;
   padding: 3%;
   margin-bottom: 5%;
   text-align: center;
+  font-size: 2em;
 }
 
 .form-explanation {
