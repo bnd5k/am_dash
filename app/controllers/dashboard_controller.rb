@@ -35,7 +35,6 @@ class DashboardController < ApplicationController
     account_summary_store && weather_store && events_store && news_store
     #note that if API calls fails to download and store data, we'll at least have some object,
     #even if it's just an empty array or empty hash
-
   end
 
   def account_summary_store

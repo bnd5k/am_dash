@@ -1,5 +1,3 @@
-# require 'active_record'
-# require './app/models/user'
 require 'am_dash/account/find_or_create_from_google'
 require 'am_dash/account/update_location_coordinates'
 require 'am_dash/account/generate_account_summary'

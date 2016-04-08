@@ -50,8 +50,6 @@ module AMDash
         end
       end
 
-      
-
       def authorized_client(token)
         #FIXME: POC does bare mininum for auth. Should be more robust.
         client = Google::APIClient.new
