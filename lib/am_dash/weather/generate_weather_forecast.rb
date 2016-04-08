@@ -31,14 +31,16 @@ module AMDash
       attr_reader :user_model, :cache, :update_location_coordinates
 
       def upcoming_weather(location)
-        forecast_for_today = all_weather(location.latitude, location.longitude)["hourly"]["data"]
-
         result = []
+        weather_report = all_weather(location.latitude, location.longitude)
+        if weather_report
+          forecasts_for_today  = weather_report["hourly"]["data"]
 
-        forecast_for_today.each do |weather_data|
-          hour = Time.at(weather_data["time"]).hour
-          if selectable_time?(hour)
-            result << { time: hour, temp: weather_data["temperature"] }
+          forecasts_for_today.each do |weather_data|
+            hour = Time.at(weather_data["time"]).hour
+            if selectable_time?(hour)
+              result << { time: hour, temp: weather_data["temperature"] }
+            end
           end
         end
 
@@ -56,9 +58,6 @@ module AMDash
 
         if response.code == "200"
           response_body = JSON.parse(response.body)
-        else
-          #TODO: Add logging
-          []
         end
       end
 
