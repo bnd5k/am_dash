@@ -1,4 +1,4 @@
-require 'JSON'
+require 'json'
 require 'am_dash/cache_expiration'
 
 module AMDash

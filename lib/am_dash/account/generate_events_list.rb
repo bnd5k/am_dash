@@ -1,5 +1,5 @@
 require 'active_support/time'
-require 'JSON'
+require 'json'
 require 'am_dash/cache_expiration'
 require 'google/api_client'
 
