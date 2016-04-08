@@ -25,6 +25,7 @@ RSpec.describe DashboardController, type: :request do
   end
 
   before do
+    stub_const('ENV', {'AM_DASH_WORKER' => 'sucker_punch'})
     allow(AMDash::Account::GenerateAccountSummary).to receive(:new).and_return(generate_account_summary)
     allow(AMDash::Account::GenerateEventsList).to receive(:new).and_return(generate_events_list)
     allow(AMDash::Weather::GenerateWeatherForecast).to receive(:new).and_return(generate_weather_forecast)

@@ -22,7 +22,6 @@ describe AMDash::Worker do
     end
 
     it "raises an error when job_name not recognized" do
-
       expect{ subject.enqueue(:some_job) }.to raise_error described_class::NoJobFoundError
     end
   end
