@@ -33,11 +33,11 @@
 
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 
+    <%= yield :javascript_includes %>
     <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['AM_DASH_GOOGLE_BROWSER_KEY'] %>&callback=AMDash.initMap">
     </script>
 
-    <%= yield :javascript_includes %>
 
   </body>
 </html>
