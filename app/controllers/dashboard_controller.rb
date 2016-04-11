@@ -25,8 +25,8 @@ class DashboardController < ApplicationController
 
   def verify_user_data_present
     unless stored_data_present?
-      redirect_to loading_path
       AMDash::Worker.enqueue(:download_and_store_user_data, current_user.id)
+      redirect_to loading_path
     end
   end
 

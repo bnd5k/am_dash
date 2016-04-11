@@ -31,17 +31,76 @@ RSpec.describe DashboardController, type: :request do
     allow(AMDash::News::GenerateRecentArticlesList).to receive(:new).and_return(generate_recent_article_list)
   end
 
-  it 'loads the dashboard' do
-    sign_in user
+  describe "GET index" do
+    context 'dashboard data not present' do
+      it 'generates the dashboard data the dashboard' do
+        sign_in user
 
-    expect(generate_account_summary).to receive(:execute).with(any_args)
-    expect(generate_events_list).to receive(:execute).with(user.id)
-    expect(generate_weather_forecast).to receive(:execute).with(user.id)
-    expect(generate_recent_article_list).to receive(:execute)
+        expect(generate_account_summary).to receive(:execute).with(user.id)
+        expect(generate_events_list).to receive(:execute).with(user.id)
+        expect(generate_weather_forecast).to receive(:execute).with(user.id)
+        expect(generate_recent_article_list).to receive(:execute)
 
-    expect(JSON).to receive(:parse).with(any_args).exactly(4).times.and_return({})
+        # expect(JSON).to receive(:parse).with(any_args).exactly(4).times.and_return({})
 
-    get '/'
+        get '/'
+        expect(response.code).to eq "302"
+      end
+    end
+
+    context 'dashboard data present' do
+      let(:account) { { "name" => "Joes" }.to_json }
+      let(:weather) { [ { "temp" => "70" }].to_json }
+      let(:events) { [ { "start" => "12:00pm", "name" => "lunch"} ].to_json }
+      let(:news) { [ { "headline" => "bad", "snippet" => "even worse", "url" => "nyt.com" } ].to_json }
+
+      it 'loads the data from the cache store' do
+        sign_in user
+
+        allow(AMDash::Cache).to receive(:read).with(
+          "#{user.id}-account"
+        ).and_return(account)
+        allow(AMDash::Cache).to receive(:read).with(
+          "#{user.id}-weather"
+        ).and_return(weather)
+        allow(AMDash::Cache).to receive(:read).with(
+          "#{user.id}-events"
+        ).and_return(events)
+        allow(AMDash::Cache).to receive(:read).with(
+          "news"
+        ).and_return(news)
+
+        get '/'
+
+        expect(response.code).to eq "200"
+      end
+    end
+
+    context 'dashboard data present but empty' do
+      let(:empty_array) { [].to_json }
+      let(:empty_hash) { {}.to_json }
+
+      it 'loads the data from the cache store' do
+        sign_in user
+
+        allow(AMDash::Cache).to receive(:read).with(
+          "#{user.id}-account"
+        ).and_return(empty_hash)
+        allow(AMDash::Cache).to receive(:read).with(
+          "#{user.id}-weather"
+        ).and_return(empty_array)
+        allow(AMDash::Cache).to receive(:read).with(
+          "#{user.id}-events"
+        ).and_return(empty_array)
+        allow(AMDash::Cache).to receive(:read).with(
+          "news"
+        ).and_return(empty_array)
+
+        get '/'
+
+        expect(response.code).to eq "200"
+      end
+    end
   end
 
 end

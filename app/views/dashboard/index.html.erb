@@ -70,7 +70,7 @@
                 <% @weather_forecast.each do |forecast| %>
 
                   <td>
-                    <%= forecast["temp"].to_i %> &deg;
+                    <%= forecast["temp"] ? forecast["temp"].to_i : "n/a" %> &deg;
                   </td>
 
                 <% end %>
