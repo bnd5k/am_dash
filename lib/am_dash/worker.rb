@@ -13,9 +13,8 @@ module AMDash
         if ENV["AM_DASH_WORKER"] == "sucker_punch"
           #env variable here will ultimately allow for hotswapping workers
           #totally premature optimization, but I've been wanting to play withsomething like this
-          #lately
           job = sucker_punch_job_from_string(job_name)    
-          job.perform(*args)
+          job.perform_async(*args)
         else
           raise NoWorkerError
         end
@@ -27,7 +26,7 @@ module AMDash
       def sucker_punch_job_from_string(job_name)
         case job_name.to_sym
         when :download_and_store_user_data
-          AMDash::Worker::SuckerPunch::DownloadAndStoreUserData.new
+          AMDash::Worker::SuckerPunch::DownloadAndStoreUserData
         else
           raise NoJobFoundError 
         end
