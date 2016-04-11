@@ -1,17 +1,21 @@
 require 'active_support/time'
 require 'json'
 require 'am_dash/cache_expiration'
+require 'am_dash/locations/timezone_convertable'
 require 'google/api_client'
+require 'am_dash/account/obtain_google_access_token'
 
 module AMDash
   module Account
     class GenerateEventsList
 
       include AMDash::CacheExpiration
+      include AMDash::Locations::TimezoneConvertable
 
-      def initialize(cache, user_model)
+      def initialize(cache, user_model, obtain_google_access_token)
         @cache = cache
         @user_model = user_model
+        @obtain_google_access_token = obtain_google_access_token
       end
 
       def execute(user_id)
@@ -19,60 +23,98 @@ module AMDash
         payload = selected_calendar_events(user)
 
         write_to_cache(user_id, payload.to_json)
+
+      rescue AMDash::Account::ObtainGoogleAccessToken::UnableToObtainGoogleAccessTokenError
+        #FIXME: seems silly to use D.I. but also require the class
+
+        write_to_cache(user_id, [].to_json)
       end
 
       private
 
-      attr_reader :cache, :user_model
+      attr_reader :cache, :user_model, :obtain_google_access_token
 
       def selected_calendar_events(user)
         result = []
         all_calendar_events(user).each do |event|
-          result << { start: event["start"]["dateTime"], name: event["summary"] }
+          raw_start = event["start"]["date"]
+          if raw_start
+            formatted_start = DateTime.parse(raw_start).strftime("%l:%M %p").strip
+
+            result << { start: formatted_start, name: event["summary"] }
+          end
         end
         result
       end
 
       def all_calendar_events(user)
-        client = authorized_client(user.google_token)
+        client = authorized_client(user)
         service = client.discovered_api('calendar', 'v3')
+        timezone = timezone_from_google(client, service)
+
+        if !timezone
+          default_timezone = "Eastern Time (US & Canada)" 
+          #TODO: log the fact that we didn't grab timezone
+          timezone = default_timezone
+        end
+
         response = client.execute(:api_method => service.events.list,
-                                  :parameters => request_parameters(user.email),
+                                  :parameters => request_parameters(user.email, timezone),
                                   :headers => {'Content-Type' => 'application/json'}
                                  )
+        parsed_response(response) || []
+      end
 
-        if response.status == "200"
-          response_body = JSON.parse(response.body)
+      def timezone_from_google(client, service)
+        service = client.discovered_api('calendar', 'v3')
+        response = client.execute(:api_method => service.settings.list,  :headers => {'Content-Type' => 'application/json'})
+
+        parsed_resp = parsed_response(response)
+        if parsed_resp
+          google_timezone_name = parsed_resp.find { |i| i["id"] == "timezone"  }["value"]
+          timezone = google_to_rails_timezone_name(google_timezone_name)
+        end
+
+        timezone 
+      end
+
+      def parsed_response(raw_response)
+        if raw_response.status == 200
+          response_body = JSON.parse(raw_response.body)
+
           response_body["items"]
-        else
-          #TODO: Add logging
-          []
         end
       end
 
-      def authorized_client(token)
-        #FIXME: POC does bare mininum for auth. Should be more robust.
-        client = Google::APIClient.new
-        client.authorization.access_token = token
-        client
-      end
-
-      def request_parameters(email)
+      def request_parameters(email, timezone)
         {
           "calendarId" => email,
-          "timeMin" => beginning_of_day,
-          "timeMax" => end_of_day
+          "timeMin" => beginning_of_day(timezone),
+          "timeMax" => end_of_day(timezone)
         }
       end
 
-      def beginning_of_day
-        DateTime.now.utc.beginning_of_day.rfc3339
-        #hate to pollute lib dir with Rails classes, but Google insists of RFC 3339 format 
+      def beginning_of_day(timezone)
+        DateTime.now.in_time_zone(timezone).beginning_of_day.rfc3339
+        #hate to pollute lib dir with Rails classes, but Google jkinsists of RFC 3339 format 
         #and ActiveSupport already has a method for this.
       end
 
-      def end_of_day
-        DateTime.now.utc.end_of_day.rfc3339
+      def end_of_day(timezone)
+        DateTime.now.in_time_zone(timezone).end_of_day.rfc3339
+      end
+
+      def authorized_client(user)
+        #FIXME: POC does bare mininum for auth. Should be more robust.
+        client = Google::APIClient.new(application_name: ENV["AM_DASH_APP_NAME"])
+
+        client.authorization.access_token = google_access_token(user)
+
+        client
+      end
+
+      def google_access_token(user)
+        obtain_google_access_token.execute(user)
       end
 
       def write_to_cache(user_id, payload)

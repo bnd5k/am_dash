@@ -2,6 +2,7 @@ require 'am_dash/account/find_or_create_from_google'
 require 'am_dash/account/update_location_coordinates'
 require 'am_dash/account/generate_account_summary'
 require 'am_dash/account/generate_events_list'
+require 'am_dash/account/obtain_google_access_token'
 require 'am_dash/locations/create'
 require 'am_dash/locations/coordinates_from_address'
 require 'am_dash/news/generate_recent_articles_list'
@@ -39,7 +40,11 @@ module AMDash
     end
 
     def generate_events_list
-      AMDash::Account::GenerateEventsList.new(cache, ::User)
+      AMDash::Account::GenerateEventsList.new(
+        cache,
+        ::User, 
+        obtain_google_access_token
+      )
     end
 
     def generate_recent_article_list
@@ -66,6 +71,10 @@ module AMDash
 
     def cache
       AMDash::Cache
+    end
+
+    def obtain_google_access_token
+      AMDash::Account::ObtainGoogleAccessToken.new
     end
 
   end
