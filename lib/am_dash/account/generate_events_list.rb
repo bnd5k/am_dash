@@ -12,10 +12,11 @@ module AMDash
       include AMDash::CacheExpiration
       include AMDash::Locations::TimezoneConvertable
 
-      def initialize(cache, user_model, obtain_google_access_token)
+      def initialize(cache, user_model, obtain_google_access_token, logger)
         @cache = cache
         @user_model = user_model
         @obtain_google_access_token = obtain_google_access_token
+        @logger = logger
       end
 
       def execute(user_id)
@@ -32,12 +33,12 @@ module AMDash
 
       private
 
-      attr_reader :cache, :user_model, :obtain_google_access_token
+      attr_reader :cache, :user_model, :obtain_google_access_token, :logger
 
       def selected_calendar_events(user)
         result = []
         all_calendar_events(user).each do |event|
-          raw_start = event["start"]["date"]
+          raw_start = event["start"]["dateTime"]
           if raw_start
             formatted_start = DateTime.parse(raw_start).strftime("%l:%M %p").strip
 
@@ -54,7 +55,7 @@ module AMDash
 
         if !timezone
           default_timezone = "Eastern Time (US & Canada)" 
-          #TODO: log the fact that we didn't grab timezone
+          logger.info("Unable to grab timezone for user: #{user.id}")
           timezone = default_timezone
         end
 
@@ -105,9 +106,7 @@ module AMDash
       end
 
       def authorized_client(user)
-        #FIXME: POC does bare mininum for auth. Should be more robust.
         client = Google::APIClient.new(application_name: ENV["AM_DASH_APP_NAME"])
-
         client.authorization.access_token = google_access_token(user)
 
         client

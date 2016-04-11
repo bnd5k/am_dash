@@ -43,7 +43,8 @@ module AMDash
       AMDash::Account::GenerateEventsList.new(
         cache,
         ::User, 
-        obtain_google_access_token
+        obtain_google_access_token,
+        logger
       )
     end
 
@@ -75,6 +76,10 @@ module AMDash
 
     def obtain_google_access_token
       AMDash::Account::ObtainGoogleAccessToken.new
+    end
+
+    def logger
+      Rails.logger
     end
 
   end
