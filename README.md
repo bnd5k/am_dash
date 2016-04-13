@@ -13,6 +13,24 @@ would appear on an AppleTV or Chromecast.
 * Events section pulls from user's Google Events API
 * Weather forecast consumes data from Forecast.io API.
 
+## Running the app
+The app requires a bunch of environment variables. The `dotenv` gem to set environment variables.
+Create a .env file add add the following API keys:
+```
+export AM_DASH_NYT_KEY=< NYP API Key>
+
+export AM_DASH_GOOGLE_BROWSER_KEY=< GOOGLE API KEY FOR BROWSER REQUESTS >
+export AM_DASH_GOOGLE_KEY=< GOOGLE OAUTH CLIENT API KEY >
+export AM_DASH_GOOGLE_SECRET=< GOOGLE OAUTH CLIENT API SECRET >
+
+export AM_DASH_FORECAST_IO_KEY=< ForecastIO KEY > 
+
+export AM_DASH_WORKER="sucker_punch"
+export AM_DASH_APP_NAME="A.M. Dash Local"
+
+```
+
+
 ## Automated Tests
 
 Test coverage focuses on the business logic, which is located in `lib/am_dash`.
