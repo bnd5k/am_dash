@@ -19,7 +19,6 @@ describe AMDash::Weather::GenerateWeatherForecast do
   subject { described_class.new(user_model, cache, update_location_coordinates) }
 
   before do
-    stub_const('ENV', {'AM_DASH_OPEN_WEATHER_KEY' => 'asdf'})
     allow(Time).to receive(:now).and_return(mock_time)
   end
 
