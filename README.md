@@ -14,7 +14,7 @@ would appear on an AppleTV or Chromecast.
 * Weather forecast consumes data from Forecast.io API.
 
 ## Running the app
-The app requires a bunch of environment variables. The `dotenv` gem to set environment variables.
+The app requires a bunch of environment variables. In development and test environments, the app uses the `dotenv` gem to set environment variables.
 Create a .env file add add the following API keys:
 ```
 export AM_DASH_NYT_KEY=< NYP API Key>
