@@ -12,9 +12,10 @@ module AMDash
       end
 
       def execute
-        payload = selected_articles
+        payload = selected_articles.to_json
 
-        write_to_cache(payload.to_json)
+        write_to_cache(payload)
+        payload
       end
 
       private

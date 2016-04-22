@@ -15,8 +15,8 @@ describe AMDash::Account::GenerateEventsList do
   let(:calendar_query_params) do
     {
       "calendarId" => user.email,
-      "timeMin" => DateTime.now.in_time_zone("America/Los_Angeles").beginning_of_day.rfc3339,
-      "timeMax" => DateTime.now.in_time_zone("America/Los_Angeles").end_of_day.rfc3339
+      "timeMin" => DateTime.now.in_time_zone("America/Los_Angeles").beginning_of_day.strftime("%FT%T%z"),
+      "timeMax" => DateTime.now.in_time_zone("America/Los_Angeles").end_of_day.strftime("%FT%T%z")
     }
   end
 

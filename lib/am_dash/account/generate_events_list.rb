@@ -37,7 +37,8 @@ module AMDash
 
       def selected_calendar_events(user)
         result = []
-        all_calendar_events(user).each do |event|
+        ordered_calendar_events = all_calendar_events(user).sort_by { |hsh| DateTime.parse(hsh["start"]["dateTime"]) }
+        ordered_calendar_events.each do |event|
           raw_start = event["start"]["dateTime"]
           if raw_start
             formatted_start = DateTime.parse(raw_start).strftime("%l:%M %p").strip
@@ -96,13 +97,18 @@ module AMDash
       end
 
       def beginning_of_day(timezone)
-        DateTime.now.in_time_zone(timezone).beginning_of_day.rfc3339
-        #hate to pollute lib dir with Rails classes, but Google jkinsists of RFC 3339 format 
-        #and ActiveSupport already has a method for this.
+        day_beginning = DateTime.now.in_time_zone(timezone).beginning_of_day
+        rfc3339_formatting(day_beginning)
       end
 
       def end_of_day(timezone)
-        DateTime.now.in_time_zone(timezone).end_of_day.rfc3339
+        day_end = DateTime.now.in_time_zone(timezone).end_of_day
+        rfc3339_formatting(day_end)
+      end
+
+      def rfc3339_formatting(date_time_object)
+        #Google insists of RFC 3339 format 
+        date_time_object.strftime("%FT%T%z")
       end
 
       def authorized_client(user)
