@@ -42,4 +42,13 @@ Rails.application.configure do
 
   #for Devise
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+  #for bullet 
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.alert = true
+    Bullet.bullet_logger = true
+    Bullet.rails_logger = true
+  end
+
 end
