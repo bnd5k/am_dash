@@ -75,7 +75,9 @@ module AMDash
     end
 
     def obtain_google_access_token
-      AMDash::Account::ObtainGoogleAccessToken.new
+      AMDash::Account::ObtainGoogleAccessToken.new(
+        ::User
+      )
     end
 
     def logger

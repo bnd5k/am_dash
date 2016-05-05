@@ -5,7 +5,14 @@ module AMDash
   module Account
     class ObtainGoogleAccessToken
 
-      def execute(user)
+      def initialize(user_model)
+        @user_model = user_model
+      end
+
+      def execute(user_id)
+        user = user_model.find_by_id(user_id) 
+        raise UserNotFoundError unless user
+
         if user.google_token && user.google_refresh_token
           token = find_or_request_google_access_token(user)
           token
@@ -15,6 +22,8 @@ module AMDash
       end
 
       private
+
+      attr_reader :user_model
 
       def find_or_request_google_access_token(user)
         if Time.at(user.google_token_expiration.to_i).utc <=  Time.now.utc
@@ -60,6 +69,7 @@ module AMDash
       end
 
       class UnableToObtainGoogleAccessTokenError < StandardError ; end
+      class UserNotFoundError < StandardError ; end
 
     end
   end
