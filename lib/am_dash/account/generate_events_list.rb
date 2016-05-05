@@ -37,7 +37,11 @@ module AMDash
 
       def selected_calendar_events(user)
         result = []
-        ordered_calendar_events = all_calendar_events(user).sort_by { |hsh| DateTime.parse(hsh["start"]["dateTime"]) }
+
+        calendar_events = all_calendar_events(user).select { |hsh| DateTime.parse(hsh["start"]["dateTime"])  if hsh["start"] && hsh["start"]["dateTime"] }
+          
+        ordered_calendar_events = calendar_events.sort_by { |hsh| DateTime.parse(hsh["start"]["dateTime"]) }
+
         ordered_calendar_events.each do |event|
           raw_start = event["start"]["dateTime"]
           if raw_start
