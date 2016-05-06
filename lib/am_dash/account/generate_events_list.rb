@@ -1,9 +1,7 @@
 require 'active_support/time'
-require 'json'
 require 'am_dash/cache_expiration'
 require 'am_dash/locations/timezone_convertable'
-require 'google/api_client'
-require 'am_dash/account/obtain_google_access_token'
+require 'json'
 
 module AMDash
   module Account
@@ -12,28 +10,24 @@ module AMDash
       include AMDash::CacheExpiration
       include AMDash::Locations::TimezoneConvertable
 
-      def initialize(cache, user_model, obtain_google_access_token, logger)
+      def initialize(cache, user_model, logger, calendar_service)
         @cache = cache
         @user_model = user_model
-        @obtain_google_access_token = obtain_google_access_token
         @logger = logger
+        @calendar_service = calendar_service
       end
 
       def execute(user_id)
         user = user_model.find_by_id(user_id)
+        
         payload = selected_calendar_events(user)
 
         write_to_cache(user_id, payload.to_json)
-
-      rescue AMDash::Account::ObtainGoogleAccessToken::UnableToObtainGoogleAccessTokenError
-        #FIXME: seems silly to use D.I. but also require the class
-
-        write_to_cache(user_id, [].to_json)
       end
 
       private
 
-      attr_reader :cache, :user_model, :obtain_google_access_token, :logger
+      attr_reader :cache, :user_model, :logger, :calendar_service
 
       def selected_calendar_events(user)
         result = []
@@ -54,9 +48,7 @@ module AMDash
       end
 
       def all_calendar_events(user)
-        client = authorized_client(user)
-        service = client.discovered_api('calendar', 'v3')
-        timezone = timezone_from_google(client, service)
+        timezone = timezone_from_google(user.id)
 
         if !timezone
           default_timezone = "Eastern Time (US & Canada)" 
@@ -64,40 +56,18 @@ module AMDash
           timezone = default_timezone
         end
 
-        response = client.execute(:api_method => service.events.list,
-                                  :parameters => request_parameters(user.email, timezone),
-                                  :headers => {'Content-Type' => 'application/json'}
-                                 )
-        parsed_response(response) || []
+        calendar_events = calendar_service.calendar_events_list(user.id, user.email, timezone)
       end
 
-      def timezone_from_google(client, service)
-        service = client.discovered_api('calendar', 'v3')
-        response = client.execute(:api_method => service.settings.list,  :headers => {'Content-Type' => 'application/json'})
+      def timezone_from_google(user_id)
+        parsed_resp = calendar_service.timezone_request(user_id)
 
-        parsed_resp = parsed_response(response)
         if parsed_resp
           google_timezone_name = parsed_resp.find { |i| i["id"] == "timezone"  }["value"]
           timezone = google_to_rails_timezone_name(google_timezone_name)
         end
 
         timezone 
-      end
-
-      def parsed_response(raw_response)
-        if raw_response.status == 200
-          response_body = JSON.parse(raw_response.body)
-
-          response_body["items"]
-        end
-      end
-
-      def request_parameters(email, timezone)
-        {
-          "calendarId" => email,
-          "timeMin" => beginning_of_day(timezone),
-          "timeMax" => end_of_day(timezone)
-        }
       end
 
       def beginning_of_day(timezone)
@@ -113,17 +83,6 @@ module AMDash
       def rfc3339_formatting(date_time_object)
         #Google insists of RFC 3339 format 
         date_time_object.strftime("%FT%T%z")
-      end
-
-      def authorized_client(user)
-        client = Google::APIClient.new(application_name: ENV["AM_DASH_APP_NAME"])
-        client.authorization.access_token = google_access_token(user)
-
-        client
-      end
-
-      def google_access_token(user)
-        obtain_google_access_token.execute(user)
       end
 
       def write_to_cache(user_id, payload)

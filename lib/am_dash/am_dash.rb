@@ -2,6 +2,7 @@ require 'am_dash/account/find_or_create_from_google'
 require 'am_dash/account/update_location_coordinates'
 require 'am_dash/account/generate_account_summary'
 require 'am_dash/account/generate_events_list'
+require 'am_dash/google/api_request_service'
 require 'am_dash/account/obtain_google_access_token'
 require 'am_dash/locations/create'
 require 'am_dash/locations/coordinates_from_address'
@@ -43,8 +44,8 @@ module AMDash
       AMDash::Account::GenerateEventsList.new(
         cache,
         ::User, 
-        obtain_google_access_token,
-        logger
+        logger,
+        google_api_service
       )
     end
 
@@ -61,6 +62,13 @@ module AMDash
     end
 
     private
+
+    def google_api_service
+      AMDash::Google::APIRequestService.new(
+        obtain_google_access_token,
+        logger
+      )
+    end
 
     def update_location_coordinates
      AMDash::Account::UpdateLocationCoordinates.new(::User, coordinates_from_address)
