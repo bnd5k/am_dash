@@ -3,7 +3,7 @@ require 'am_dash/account/update_location_coordinates'
 require 'am_dash/account/generate_account_summary'
 require 'am_dash/account/generate_events_list'
 require 'am_dash/google/api_request_service'
-require 'am_dash/account/obtain_google_access_token'
+require 'am_dash/google/obtain_google_access_token'
 require 'am_dash/locations/create'
 require 'am_dash/locations/coordinates_from_address'
 require 'am_dash/news/generate_recent_articles_list'
@@ -83,7 +83,7 @@ module AMDash
     end
 
     def obtain_google_access_token
-      AMDash::Account::ObtainGoogleAccessToken.new(
+      AMDash::Google::ObtainGoogleAccessToken.new(
         ::User
       )
     end

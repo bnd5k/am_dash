@@ -2,7 +2,7 @@ require 'net/http'
 require 'json'
 
 module AMDash
-  module Account
+  module Google
     class ObtainGoogleAccessToken
 
       def initialize(user_model)

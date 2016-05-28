@@ -1,6 +1,6 @@
-require 'am_dash/account/obtain_google_access_token'
+require 'am_dash/google//obtain_google_access_token'
 
-describe AMDash::Account::ObtainGoogleAccessToken do
+describe AMDash::Google::ObtainGoogleAccessToken do
   let(:user_model) { double(:user_model) }
   let(:user) { double(:user, google_token: 'google_token',google_refresh_token: 'refreshToken', id: 666) }
   let(:yesterday) { Date.today.prev_day.to_time.to_i.to_s }
