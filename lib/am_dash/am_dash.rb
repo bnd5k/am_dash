@@ -16,7 +16,7 @@ module AMDash
   class << self
 
     def find_or_create_from_google
-      AMDash::Account::FindOrCreateFromGoogle.new(::User)
+      AMDash::Account::FindOrCreateFromGoogle.new(::User, logger)
     end
 
     def create_location
