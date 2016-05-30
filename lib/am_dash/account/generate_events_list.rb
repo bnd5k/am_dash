@@ -1,4 +1,3 @@
-require 'active_support/time'
 require 'am_dash/cache_expiration'
 require 'am_dash/locations/timezone_convertable'
 require 'json'
@@ -68,21 +67,6 @@ module AMDash
         end
 
         timezone 
-      end
-
-      def beginning_of_day(timezone)
-        day_beginning = DateTime.now.in_time_zone(timezone).beginning_of_day
-        rfc3339_formatting(day_beginning)
-      end
-
-      def end_of_day(timezone)
-        day_end = DateTime.now.in_time_zone(timezone).end_of_day
-        rfc3339_formatting(day_end)
-      end
-
-      def rfc3339_formatting(date_time_object)
-        #Google insists of RFC 3339 format 
-        date_time_object.strftime("%FT%T%z")
       end
 
       def write_to_cache(user_id, payload)
