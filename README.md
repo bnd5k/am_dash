@@ -5,7 +5,7 @@ provides weather, traffic info, the day's calendar, and top news items.
 This is a proof of concept.  The goal is to transform this into the backend
 of a dashboard app that would appear on an AppleTV or Chromecast. 
 
-For a live demo of this app, check out [am-dash.herokuapp.com](am-dash.herokuapp.com)
+For a live demo of this app, check out [am-dash.herokuapp.com](http://am-dash.herokuapp.com)
 
 ## APIs
 
